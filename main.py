@@ -224,7 +224,7 @@ async def media_info(request: InfoRequest) -> dict[str, Any]:
 
 @app.post("/api/download")
 async def media_download(request: DownloadRequest, background_tasks: BackgroundTasks) -> FileResponse:
-    output_dir = Path(tempfile.mkdtemp(prefix="clipforge-"))
+    output_dir = Path(tempfile.mkdtemp(prefix="yyyclips-"))
     try:
         media_path = await asyncio.to_thread(download_media, request, output_dir)
     except RuntimeError as exc:

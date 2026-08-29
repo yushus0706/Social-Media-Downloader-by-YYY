@@ -1,4 +1,4 @@
-# ClipForge
+# YYYClips
 
 A local FastAPI web app for downloading media from YouTube, Instagram, and TikTok through `yt-dlp`. The browser UI inspects a URL, shows available video resolutions or audio bitrates, then downloads an MP4 or MP3 file.
 
