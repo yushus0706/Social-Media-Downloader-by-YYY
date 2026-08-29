@@ -2,24 +2,24 @@
 
 ## 🚀 Live Deployment
 
-**YYYClips is already live at: [https://yyyclips.up.railway.app](https://yyyclips.up.railway.app)**
+**YYYClips is already live at: [https://yyyclips.up.netlify.app](https://yyyclips.up.netlify.app)**
 
-The app is deployed on Railway with automatic updates from GitHub. Any push to the `main` branch will trigger an automatic deployment.
+The app is deployed on Netlify with automatic updates from GitHub. Any push to the `main` branch will trigger an automatic deployment.
 
-## Deploy to Railway (Already Done!)
+## Deploy to Netlify (Already Done!)
 
-Railway automatically deploys from GitHub with zero configuration. This repo is already configured and deployed.
+Netlify automatically deploys from GitHub with zero configuration. This repo is already configured and deployed.
 
 ### How It's Deployed:
 
-1. Repository is connected to Railway
+1. Repository is connected to Netlify
 2. Every commit to `main` triggers an automatic build
-3. FFmpeg is pre-installed on Railway
+3. FFmpeg is pre-installed on Netlify
 4. Your app scales automatically
 
 ### If You Want to Deploy Your Own Fork:
 
-1. **Go to [railway.app](https://railway.app)**
+1. **Go to [Netlify.app](https://Netlify.app)**
    - Sign up with GitHub (connect your account)
 
 2. **Create New Project**
@@ -28,7 +28,7 @@ Railway automatically deploys from GitHub with zero configuration. This repo is 
    - Choose your fork of `SocialMedia-Downloader-by-YYY`
 
 3. **Deploy**
-   - Railway auto-detects the Python project
+   - Netlify auto-detects the Python project
    - Click "Deploy"
    - Your app will be live in ~2-5 minutes
 
@@ -51,7 +51,7 @@ Railway automatically deploys from GitHub with zero configuration. This repo is 
 - **FFmpeg:** These cloud platforms have FFmpeg pre-installed, so audio/video conversion will work
 - **Storage:** Downloaded files are temporary and automatically cleaned up
 - **No Database:** The app is stateless, so it scales easily
-- **Free Tier:** Both Railway and Render offer free monthly credits
+- **Free Tier:** Both Netlify and Render offer free monthly credits
 
 ---
 
