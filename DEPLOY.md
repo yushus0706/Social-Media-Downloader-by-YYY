@@ -2,7 +2,7 @@
 
 ## 🚀 Live Deployment
 
-**YYYClips is already live at: [https://yyyclips.up.netlify.app](https://yyyclips.up.netlify.app)**
+**YYYClips is already live at: [https://yyyclips.netlify.app](https://yyyclips.netlify.app/)**
 
 The app is deployed on Netlify with automatic updates from GitHub. Any push to the `main` branch will trigger an automatic deployment.
 
