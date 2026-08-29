@@ -21,7 +21,7 @@ VIDEO_BUCKETS = ((2160, "4K"), (1440, "1440p"), (1080, "1080p"), (720, "720p"), 
 AUDIO_PRESETS = ["320 kbps (High Quality)", "256 kbps", "192 kbps", "128 kbps (Standard)"]
 ASPECT_SUFFIXES = ("", " Square", " Vertical / Reel / Short")
 
-app = FastAPI(title="ClipForge", version="1.0.0")
+app = FastAPI(title="YYYClips", version="1.0.0")
 
 
 class InfoRequest(BaseModel):
