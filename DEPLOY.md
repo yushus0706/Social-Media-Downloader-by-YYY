@@ -1,10 +1,23 @@
 # YYYClips Online Deployment Guide
 
-## Deploy to Railway (Recommended - Easiest)
+## 🚀 Live Deployment
 
-Railway automatically deploys from GitHub with zero configuration needed.
+**YYYClips is already live at: [https://yyyclips.up.railway.app](https://yyyclips.up.railway.app)**
 
-### Steps:
+The app is deployed on Railway with automatic updates from GitHub. Any push to the `main` branch will trigger an automatic deployment.
+
+## Deploy to Railway (Already Done!)
+
+Railway automatically deploys from GitHub with zero configuration. This repo is already configured and deployed.
+
+### How It's Deployed:
+
+1. Repository is connected to Railway
+2. Every commit to `main` triggers an automatic build
+3. FFmpeg is pre-installed on Railway
+4. Your app scales automatically
+
+### If You Want to Deploy Your Own Fork:
 
 1. **Go to [railway.app](https://railway.app)**
    - Sign up with GitHub (connect your account)
@@ -12,20 +25,12 @@ Railway automatically deploys from GitHub with zero configuration needed.
 2. **Create New Project**
    - Click "Create New Project"
    - Select "Deploy from GitHub repo"
-   - Choose `yushus0706/Social-Media-Downloader-by-YYY`
+   - Choose your fork of `SocialMedia-Downloader-by-YYY`
 
-3. **Add Variables**
-   - Railway will automatically detect the Python project
-   - No additional environment variables needed
-
-4. **Deploy**
+3. **Deploy**
+   - Railway auto-detects the Python project
    - Click "Deploy"
-   - Railway builds and deploys automatically
-   - You'll get a public URL in ~2-5 minutes
-
-5. **Your App is Live!**
-   - Share the URL with anyone
-   - No local installation needed
+   - Your app will be live in ~2-5 minutes
 
 ---
 

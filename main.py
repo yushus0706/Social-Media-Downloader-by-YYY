@@ -65,6 +65,8 @@ def extraction_options() -> dict[str, Any]:
         "retries": 10,
         "fragment_retries": 10,
         "socket_timeout": 60,
+        "youtube_include_dash_manifest": True,
+        "extractor_args": {"instagram": ["prefer_highres"]},
     }
 
 
@@ -167,6 +169,8 @@ def download_media(request: DownloadRequest, output_dir: Path) -> Path:
             "retries": 10,
             "fragment_retries": 10,
             "socket_timeout": 60,
+            "youtube_include_dash_manifest": True,
+            "extractor_args": {"instagram": ["prefer_highres"]},
         }
     else:
         options = {
@@ -180,8 +184,10 @@ def download_media(request: DownloadRequest, output_dir: Path) -> Path:
             "retries": 10,
             "fragment_retries": 10,
             "socket_timeout": 60,
+            "youtube_include_dash_manifest": True,
+            "extractor_args": {"instagram": ["prefer_highres"]},
             "postprocessors": [{"key": "FFmpegExtractAudio", "preferredcodec": "mp3", "preferredquality": str(target_quality)}],
-        }
+        }}
 
     try:
         with yt_dlp.YoutubeDL(options) as downloader:
