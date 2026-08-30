@@ -66,7 +66,14 @@ def extraction_options() -> dict[str, Any]:
         "fragment_retries": 10,
         "socket_timeout": 60,
         "youtube_include_dash_manifest": True,
-        "extractor_args": {"instagram": ["prefer_highres"]},
+        "extractor_args": {
+            "youtube": ["player_client=android", "player_client=web", "player_skip=webpage"],
+            "instagram": ["prefer_highres"],
+        },
+        "http_headers": {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+        },
     }
 
 
@@ -118,11 +125,31 @@ def quality_value(quality: str, media_format: Literal["mp4", "mp3"]) -> int:
 
 
 def extract_info(url: str) -> dict[str, Any]:
-    try:
-        with yt_dlp.YoutubeDL(extraction_options()) as downloader:
-            info = downloader.extract_info(url, download=False)
-    except Exception as exc:
-        raise RuntimeError(f"Unable to inspect this link: {friendly_error(exc)}") from exc
+    attempts = [extraction_options()]
+    fallback = extraction_options()
+    fallback["extractor_args"] = {
+        "youtube": ["player_client=ios", "player_client=tv_embedded", "player_client=web", "player_skip=webpage"],
+        "instagram": ["prefer_highres"],
+    }
+    attempts.append(fallback)
+
+    last_error: Exception | None = None
+    for options in attempts:
+        try:
+            with yt_dlp.YoutubeDL(options) as downloader:
+                info = downloader.extract_info(url, download=False)
+            if not info:
+                raise RuntimeError("No media was found at this URL.")
+            break
+        except Exception as exc:
+            last_error = exc
+            lowered = str(exc).lower()
+            if "sign in" not in lowered and "cookies" not in lowered and "unavailable" not in lowered and "private" not in lowered:
+                raise RuntimeError(f"Unable to inspect this link: {friendly_error(exc)}") from exc
+    else:
+        if last_error is not None:
+            raise RuntimeError(f"Unable to inspect this link: {friendly_error(last_error)}") from last_error
+        raise RuntimeError("Unable to inspect this link: The media could not be discovered anonymously.")
 
     if not info:
         raise RuntimeError("No media was found at this URL.")
@@ -170,7 +197,14 @@ def download_media(request: DownloadRequest, output_dir: Path) -> Path:
             "fragment_retries": 10,
             "socket_timeout": 60,
             "youtube_include_dash_manifest": True,
-            "extractor_args": {"instagram": ["prefer_highres"]},
+            "extractor_args": {
+                "youtube": ["player_client=android", "player_client=web", "player_skip=webpage"],
+                "instagram": ["prefer_highres"],
+            },
+            "http_headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36",
+                "Accept-Language": "en-US,en;q=0.9",
+            },
         }
     else:
         options = {
@@ -185,7 +219,14 @@ def download_media(request: DownloadRequest, output_dir: Path) -> Path:
             "fragment_retries": 10,
             "socket_timeout": 60,
             "youtube_include_dash_manifest": True,
-            "extractor_args": {"instagram": ["prefer_highres"]},
+            "extractor_args": {
+                "youtube": ["player_client=android", "player_client=web", "player_skip=webpage"],
+                "instagram": ["prefer_highres"],
+            },
+            "http_headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36",
+                "Accept-Language": "en-US,en;q=0.9",
+            },
             "postprocessors": [{"key": "FFmpegExtractAudio", "preferredcodec": "mp3", "preferredquality": str(target_quality)}],
         }
 
