@@ -1,6 +1,6 @@
 # YYYClips
 
-**🚀 Live at [https://yyyclips.up.railway.app](https://yyyclips.up.railway.app)**
+**🚀 Live at [https://yyyclips.netlify.app/](https://yyyclips.netlify.app/)**
 
 A FastAPI web app for downloading media from YouTube, Instagram, and TikTok through `yt-dlp`. Inspect a URL, select your desired video resolution or audio bitrate, and download MP4 or MP3 files instantly. No installation needed—access it online!
 
