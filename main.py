@@ -187,7 +187,7 @@ def download_media(request: DownloadRequest, output_dir: Path) -> Path:
             "youtube_include_dash_manifest": True,
             "extractor_args": {"instagram": ["prefer_highres"]},
             "postprocessors": [{"key": "FFmpegExtractAudio", "preferredcodec": "mp3", "preferredquality": str(target_quality)}],
-        }}
+        }
 
     try:
         with yt_dlp.YoutubeDL(options) as downloader:
