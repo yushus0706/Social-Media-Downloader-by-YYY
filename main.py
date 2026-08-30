@@ -26,6 +26,7 @@ app = FastAPI(title="YYYClips", version="1.0.0")
 
 class InfoRequest(BaseModel):
     url: str = Field(min_length=8, max_length=2048)
+    cookies: str | None = Field(default=None, max_length=200000)
 
     @field_validator("url")
     @classmethod
@@ -54,8 +55,8 @@ def validate_media_url(value: str) -> str:
     return value.strip()
 
 
-def extraction_options() -> dict[str, Any]:
-    return {
+def extraction_options(cookies: str | None = None) -> dict[str, Any]:
+    options = {
         "skip_download": True,
         "quiet": True,
         "no_warnings": True,
@@ -75,6 +76,17 @@ def extraction_options() -> dict[str, Any]:
             "Accept-Language": "en-US,en;q=0.9",
         },
     }
+    if cookies:
+        options["cookies"] = cookies
+    return options
+
+
+def prepare_cookie_file(cookie_text: str | None) -> str | None:
+    if not cookie_text or not cookie_text.strip():
+        return None
+    cookie_path = Path(tempfile.mkdtemp(prefix="yyyclips-cookies-")) / "cookies.txt"
+    cookie_path.write_text(cookie_text.strip(), encoding="utf-8")
+    return str(cookie_path)
 
 
 def format_options(info: dict[str, Any]) -> tuple[list[str], list[str]]:
@@ -124,9 +136,10 @@ def quality_value(quality: str, media_format: Literal["mp4", "mp3"]) -> int:
     return int(normalized.split(" ", 1)[0])
 
 
-def extract_info(url: str) -> dict[str, Any]:
-    attempts = [extraction_options()]
-    fallback = extraction_options()
+def extract_info(url: str, cookies: str | None = None) -> dict[str, Any]:
+    cookie_path = prepare_cookie_file(cookies)
+    attempts = [extraction_options(cookie_path)]
+    fallback = extraction_options(cookie_path)
     fallback["extractor_args"] = {
         "youtube": ["player_client=ios", "player_client=tv_embedded", "player_client=web", "player_skip=webpage"],
         "instagram": ["prefer_highres"],
@@ -134,6 +147,7 @@ def extract_info(url: str) -> dict[str, Any]:
     attempts.append(fallback)
 
     last_error: Exception | None = None
+    info: dict[str, Any] | None = None
     for options in attempts:
         try:
             with yt_dlp.YoutubeDL(options) as downloader:
@@ -182,6 +196,7 @@ def friendly_error(error: Exception) -> str:
 def download_media(request: DownloadRequest, output_dir: Path) -> Path:
     output_template = str(output_dir / "%(title).120s [%(id)s].%(ext)s")
     target_quality = quality_value(request.quality, request.format)
+    cookie_path = prepare_cookie_file(request.cookies)
     if request.format == "mp4":
         format_selector = f"bestvideo[height<={target_quality}][ext=mp4]+bestaudio[ext=m4a]/best[height<={target_quality}][ext=mp4]/best"
         options: dict[str, Any] = {
@@ -230,6 +245,9 @@ def download_media(request: DownloadRequest, output_dir: Path) -> Path:
             "postprocessors": [{"key": "FFmpegExtractAudio", "preferredcodec": "mp3", "preferredquality": str(target_quality)}],
         }
 
+    if cookie_path:
+        options["cookies"] = cookie_path
+
     try:
         with yt_dlp.YoutubeDL(options) as downloader:
             downloader.download([request.url])
@@ -264,7 +282,7 @@ async def terms() -> HTMLResponse:
 @app.post("/api/info")
 async def media_info(request: InfoRequest) -> dict[str, Any]:
     try:
-        return await asyncio.to_thread(extract_info, request.url)
+        return await asyncio.to_thread(extract_info, request.url, request.cookies)
     except RuntimeError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
